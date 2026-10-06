@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.package-data]
 "vectordb_bench.results" = ["*.json"]
 "vectordb_bench.fig.homepage" = ["*.png"]
+"vectordb_bench.backend.clients.ahnlich" = ["proto_manifest.json", "AHNLICH_LICENSE", "examples/*.yaml", "tools/*.sh"]
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -50,6 +51,7 @@ dependencies = [
 dynamic = ["version"]
 
 [project.optional-dependencies]
+ahnlich = ["grpcio>=1.67.1", "protobuf>=5.27.2", "ahnlich-client-py==0.2.1"]
 test = [
     "black",
     "ruff",
@@ -216,6 +218,7 @@ builtins-ignorelist = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"vectordb_bench/backend/clients/ahnlich/_grpc/**" = ["ALL"]
 "vectordb_bench/backend/clients/*" = ["PLC0415"]
 "vectordb_bench/cli/batch_cli.py" = ["PLC0415"]
 "vectordb_bench/backend/data_source.py" = ["PLC0415"]

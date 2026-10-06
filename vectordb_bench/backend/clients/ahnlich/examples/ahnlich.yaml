@@ -1,0 +1,22 @@
+ahnlich:
+  db_label: ahnlich
+  host: 127.0.0.1
+  port: 1369
+  collection_name: vdbbench_ahnlich
+  schema: public
+  case_type: Performance1536D50K
+  algorithm: hnsw
+  m: 16
+  m_zero: 32
+  ef_construction: 200
+  load_concurrency: 1
+  insert_batch_size: 100
+  k: 100
+  num_concurrency: "1,2,4,8,16"
+  concurrency_duration: 30
+  rpc_timeout: 60
+  message_size: 67108864
+  drop_old: true
+  load: true
+  search_serial: true
+  search_concurrent: true

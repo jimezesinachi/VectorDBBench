@@ -1,6 +1,7 @@
 # ruff: noqa: I001  # Keep Lakebase immediately after AlloyDB in the PG-extension registration order.
 
 from ..backend.clients.adbpg.cli import AdbpgNova
+from ..backend.clients.ahnlich.cli import Ahnlich
 from ..backend.clients.alisql.cli import AliSQLHNSW
 from ..backend.clients.alloydb.cli import AlloyDBScaNN
 from ..backend.clients.lakebase_vector.cli import LakebaseANN
@@ -60,6 +61,7 @@ from .batch_cli import BatchCli
 from .cli import cli
 
 cli.add_command(AdbpgNova)
+cli.add_command(Ahnlich)
 cli.add_command(PgVectorHNSW)
 cli.add_command(PgVectoRSHNSW)
 cli.add_command(PgVectoRSIVFFlat)

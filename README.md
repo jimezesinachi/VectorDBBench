@@ -67,6 +67,7 @@ All the database client supported
 | Optional database client | install command                             |
 |--------------------------|---------------------------------------------|
 | pymilvus, zilliz_cloud (*default*)     | `pip install vectordb-bench`                |
+| ahnlich                  | `pip install vectordb-bench[ahnlich]`       |
 | qdrant                   | `pip install vectordb-bench[qdrant]`        |
 | pinecone                 | `pip install vectordb-bench[pinecone]`      |
 | weaviate                 | `pip install vectordb-bench[weaviate]`      |
