@@ -234,3 +234,32 @@ The generator reads the DB service's transitive protobuf dependencies from the
 Ahnlich checkout, qualifies imports within the adapter, and records source hashes
 and revision in `proto_manifest.json`. Keep the Ahnlich MIT license alongside the
 bindings.
+
+
+## Diagnose loading memory
+
+For a bounded loading diagnostic, use the existing release DB binary and Small
+Cohere (100K vectors, 768 dimensions). Run `flat` and `hnsw` separately. Each
+invocation starts a fresh DB with 16 Rayon threads and a 56 GiB allocator cap,
+loads with one worker in batches of 100, then samples idle memory for 60 seconds.
+HNSW uses `m=15`, `m_zero=30`, `ef_construction=500`, and `ef_search=180`.
+Search benchmark phases are disabled; the adapter still performs its normal
+post-load correctness probe.
+
+```bash
+RESULTS_DIR="$PWD/.data/results/memory-cohere100k-flat-$(date +%Y%m%d_%H%M%S)"
+mkdir -p "$RESULTS_DIR"
+set -o pipefail
+python -m vectordb_bench.backend.clients.ahnlich.tools.diagnose_ahnlich_memory \
+  --algorithm flat --server-bin "$PWD/.data/ahnlich-target/release/ahnlich-db" \
+  --server-ref "$(git -C "$AHNLICH_ROOT" rev-parse HEAD)" --results "$RESULTS_DIR" \
+  2>&1 | tee "$RESULTS_DIR/run.txt"
+```
+
+For HNSW, use `--algorithm hnsw` and a fresh `memory-cohere100k-hnsw` directory.
+The tool writes allocator limit/usage, process RSS, stored count, phase, and UTC
+time every five seconds to `memory.csv`, alongside `commands.json`, load results,
+and server logs. Missing samples retain their errors rather than appearing as
+zero memory. Allocator usage and RSS measure different things; compare both.
+The tool checks the result JSON success label even if the loader exits zero,
+returns nonzero on a failed load, and stops its DB on completion or failure.
