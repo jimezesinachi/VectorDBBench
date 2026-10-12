@@ -17,6 +17,10 @@ python -m pip install -e '.[ahnlich]'
 
 ## Run locally
 
+Building a managed server requires Rust/Cargo and an Ahnlich source checkout.
+Set `AHNLICH_ROOT` to that checkout's root. A prebuilt binary or an already
+running DB can be used instead, as described below.
+
 The runner builds a release DB from your Ahnlich checkout, starts it, and stops
 it after benchmarking. By default it selects all registered datasets with both
 HNSW and linear/exact search, at concurrency 1, 2, 4, 8, and 16. The current
@@ -85,7 +89,7 @@ The shared workload defaults apply to every selected dataset/algorithm pair:
 | Filters | None |
 | Accuracy evaluation | Dataset-supplied queries and matching ground truth |
 | HNSW construction | `m=16`, `m_zero=32`, `ef_construction=200`; both optional construction flags disabled |
-| HNSW search | Server default `ef_search=max(k, 50)`, therefore 100 with the default `k` |
+| HNSW search | `ef_search=100`; override with `--ef-search N` (server raises it to at least `k`) |
 | Linear search | Exact search using the dataset's metric; no HNSW index |
 
 Select matrix workloads through runner options:
@@ -101,16 +105,22 @@ Select matrix workloads through runner options:
 | `--dry-run` | Preview selected workloads without executing them |
 
 Dataset and preset selections are alternatives. All other filters combine. Empty
-selections and invalid options fail before the server is built or started.
+selections and option-parsing errors fail before the server is built or started.
+Checks inside the adapter command, such as rejecting `--nq 2`, run when the
+benchmark command executes, after managed-server startup.
 For example, adding `--case-type Performance1536D50K --algorithm flat --concurrency 32`
 to the local command selects one exact-cosine run at concurrency 32. Selecting only
 an algorithm runs all matching datasets with that algorithm.
 
 Edit [the example YAML](../examples/ahnlich.yaml), or select
-another file with `CONFIG_FILE`, for shared workload and connection settings.
+another file with `CONFIG_FILE`, for shared workload, store, and schema settings.
 The matrix runner overrides the YAML's case, algorithm, and search concurrency
-with its selection. Other adapter CLI options, such as `--k` and
-`--concurrency-duration`, are forwarded to every selected run. Use
+with its selection. The wrapper also supplies the host, port, message-size limit,
+and server revision; configure those with `HOST`, `PORT`, `MESSAGE_SIZE`, and
+`SERVER_REF` environment variables rather than the YAML. When building the DB,
+`SERVER_REF` is populated automatically from the Ahnlich checkout. Other adapter
+CLI options, such as `--k` and `--concurrency-duration`, are forwarded to every
+selected run. Use
 `bash vectordb_bench/backend/clients/ahnlich/tools/run_ahnlich.sh --help` for matrix options. The standard
 `vectordbbench ahnlich` CLI still runs one case and algorithm per invocation.
 
@@ -145,8 +155,10 @@ Index construction runs inside Set. The adapter checks for an empty or oversized
 search probe after loading, but the DB has no full index-coverage endpoint and
 can swallow index errors. Inspect recall and server logs as well as QPS.
 
-The DB sets HNSW `ef_search` to `max(k, 50)`; the protocol does not expose a tuning
-option. Although the adapter returns only IDs to VectorDBBench, Ahnlich's wire
+The adapter passes `ef_search=100` by default for HNSW; `--ef-search N` overrides
+it and has no effect on linear search. The DB must include the configurable search
+breadth change ([#436](https://github.com/deven96/ahnlich/pull/436)). When the field
+is omitted by other clients, the server defaults to `max(k, 50)`. Although the adapter returns only IDs to VectorDBBench, Ahnlich's wire
 response includes vectors and metadata, and that transfer cost is measured.
 Capacity cases replay identical vectors under new IDs, which become updates in
 Ahnlich and cannot measure its capacity correctly. The CLI lists only supported
@@ -161,8 +173,17 @@ The adapter defaults to the current synchronous gRPC implementation. Select
 and channel per worker. The selector belongs to `vectordbbench ahnlich`; the shell
 runner forwards it unchanged. Result configurations record the implementation.
 
+The SDK candidate remains experimental. In the October 6, 2026 local comparison
+on the 50K-vector, 1536-dimensional OpenAI dataset, its peak HNSW QPS was about
+59 times lower and peak linear QPS about 3.1 times lower than direct gRPC, with
+identical recall. These are results from one local comparison, not a general
+performance guarantee. The cause remains under investigation; direct gRPC stays
+the default.
+
 For this comparison, install the SDK from the same Ahnlich checkout used by the
 server (`python -m pip install /absolute/path/to/ahnlich/sdk/ahnlich-client-py`).
+The SDK must include the new `GetSimN.ef_search` field; older installed versions
+are rejected before connecting.
 Run each implementation separately against the same dataset, algorithms, and
 concurrency settings, using fresh timestamped result directories. For example,
 append `--case-type Performance1536D50K --implementation grpc` for the control,

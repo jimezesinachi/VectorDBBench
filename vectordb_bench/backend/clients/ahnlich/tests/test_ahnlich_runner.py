@@ -162,6 +162,8 @@ def test_shell_forwards_implementation_to_standard_cli(tmp_path, implementation)
             "Performance1536D50K",
             "--implementation",
             implementation,
+            "--ef-search",
+            "118",
         ],
         cwd=ROOT,
         env=dict(os.environ, PYTHON=sys.executable, RESULTS_DIR=str(tmp_path)),
@@ -174,3 +176,5 @@ def test_shell_forwards_implementation_to_standard_cli(tmp_path, implementation)
         plan["runs"][0], tmp_path / "config.yaml", tmp_path / "environment.txt", plan["extra_arguments"]
     )
     assert arguments[arguments.index("--implementation") + 1] == implementation
+
+    assert arguments[arguments.index("--ef-search") + 1] == "118"

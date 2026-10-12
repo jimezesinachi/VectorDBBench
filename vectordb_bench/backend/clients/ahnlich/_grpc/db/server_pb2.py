@@ -29,7 +29,7 @@ from vectordb_bench.backend.clients.ahnlich._grpc.shared import info_pb2 as shar
 from vectordb_bench.backend.clients.ahnlich._grpc import similarity_pb2 as similarity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x64\x62/server.proto\x12\tdb.server\x1a\x19\x61lgorithm/nonlinear.proto\x1a\x0c\x63lient.proto\x1a\x0ckeyval.proto\x1a\x11shared/info.proto\x1a\x10similarity.proto\"\x06\n\x04Unit\"\x06\n\x04Pong\"6\n\nClientList\x12(\n\x07\x63lients\x18\x01 \x03(\x0b\x32\x17.client.ConnectedClient\"1\n\tStoreList\x12$\n\x06stores\x18\x01 \x03(\x0b\x32\x14.db.server.StoreInfo\"3\n\nInfoServer\x12%\n\x04info\x18\x01 \x01(\x0b\x32\x17.shared.info.ServerInfo\"/\n\x03Set\x12(\n\x06upsert\x18\x01 \x01(\x0b\x32\x18.shared.info.StoreUpsert\",\n\x03Get\x12%\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x14.keyval.DbStoreEntry\"|\n\x0cGetSimNEntry\x12\x1d\n\x03key\x18\x01 \x01(\x0b\x32\x10.keyval.StoreKey\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.keyval.StoreValue\x12*\n\nsimilarity\x18\x03 \x01(\x0b\x32\x16.similarity.Similarity\"3\n\x07GetSimN\x12(\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x17.db.server.GetSimNEntry\"\x1c\n\x03\x44\x65l\x12\x15\n\rdeleted_count\x18\x01 \x01(\x04\"&\n\x0b\x43reateIndex\x12\x17\n\x0f\x63reated_indexes\x18\x01 \x01(\x04\"\xc8\x03\n\x0eServerResponse\x12\x1f\n\x04unit\x18\x01 \x01(\x0b\x32\x0f.db.server.UnitH\x00\x12\x1f\n\x04pong\x18\x02 \x01(\x0b\x32\x0f.db.server.PongH\x00\x12,\n\x0b\x63lient_list\x18\x03 \x01(\x0b\x32\x15.db.server.ClientListH\x00\x12*\n\nstore_list\x18\x04 \x01(\x0b\x32\x14.db.server.StoreListH\x00\x12,\n\x0binfo_server\x18\x05 \x01(\x0b\x32\x15.db.server.InfoServerH\x00\x12\x1d\n\x03set\x18\x06 \x01(\x0b\x32\x0e.db.server.SetH\x00\x12\x1d\n\x03get\x18\x07 \x01(\x0b\x32\x0e.db.server.GetH\x00\x12\'\n\tget_sim_n\x18\x08 \x01(\x0b\x32\x12.db.server.GetSimNH\x00\x12\x1d\n\x03\x64\x65l\x18\t \x01(\x0b\x32\x0e.db.server.DelH\x00\x12.\n\x0c\x63reate_index\x18\n \x01(\x0b\x32\x16.db.server.CreateIndexH\x00\x12*\n\nstore_info\x18\x0b \x01(\x0b\x32\x14.db.server.StoreInfoH\x00\x42\n\n\x08response\"\xac\x01\n\tStoreInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03len\x18\x02 \x01(\x04\x12\x15\n\rsize_in_bytes\x18\x03 \x01(\x04\x12?\n\x12non_linear_indices\x18\x04 \x03(\x0b\x32#.algorithm.nonlinear.NonLinearIndex\x12\x19\n\x11predicate_indices\x18\x05 \x03(\t\x12\x11\n\tdimension\x18\x06 \x01(\rBHZFgithub.com/deven96/ahnlich/sdk/ahnlich-client-go/grpc/db/server;serverb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x64\x62/server.proto\x12\tdb.server\x1a\x19\x61lgorithm/nonlinear.proto\x1a\x0c\x63lient.proto\x1a\x0ckeyval.proto\x1a\x11shared/info.proto\x1a\x10similarity.proto\"\x06\n\x04Unit\"\x06\n\x04Pong\"6\n\nClientList\x12(\n\x07\x63lients\x18\x01 \x03(\x0b\x32\x17.client.ConnectedClient\"1\n\tStoreList\x12$\n\x06stores\x18\x01 \x03(\x0b\x32\x14.db.server.StoreInfo\"3\n\nInfoServer\x12%\n\x04info\x18\x01 \x01(\x0b\x32\x17.shared.info.ServerInfo\"/\n\x03Set\x12(\n\x06upsert\x18\x01 \x01(\x0b\x32\x18.shared.info.StoreUpsert\",\n\x03Get\x12%\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x14.keyval.DbStoreEntry\"c\n\x10ListStoreEntries\x12%\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x14.keyval.DbStoreEntry\x12\x18\n\x0bnext_cursor\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\x0e\n\x0c_next_cursor\"|\n\x0cGetSimNEntry\x12\x1d\n\x03key\x18\x01 \x01(\x0b\x32\x10.keyval.StoreKey\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.keyval.StoreValue\x12*\n\nsimilarity\x18\x03 \x01(\x0b\x32\x16.similarity.Similarity\"3\n\x07GetSimN\x12(\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x17.db.server.GetSimNEntry\"\x1c\n\x03\x44\x65l\x12\x15\n\rdeleted_count\x18\x01 \x01(\x04\"&\n\x0b\x43reateIndex\x12\x17\n\x0f\x63reated_indexes\x18\x01 \x01(\x04\"\xc8\x03\n\x0eServerResponse\x12\x1f\n\x04unit\x18\x01 \x01(\x0b\x32\x0f.db.server.UnitH\x00\x12\x1f\n\x04pong\x18\x02 \x01(\x0b\x32\x0f.db.server.PongH\x00\x12,\n\x0b\x63lient_list\x18\x03 \x01(\x0b\x32\x15.db.server.ClientListH\x00\x12*\n\nstore_list\x18\x04 \x01(\x0b\x32\x14.db.server.StoreListH\x00\x12,\n\x0binfo_server\x18\x05 \x01(\x0b\x32\x15.db.server.InfoServerH\x00\x12\x1d\n\x03set\x18\x06 \x01(\x0b\x32\x0e.db.server.SetH\x00\x12\x1d\n\x03get\x18\x07 \x01(\x0b\x32\x0e.db.server.GetH\x00\x12\'\n\tget_sim_n\x18\x08 \x01(\x0b\x32\x12.db.server.GetSimNH\x00\x12\x1d\n\x03\x64\x65l\x18\t \x01(\x0b\x32\x0e.db.server.DelH\x00\x12.\n\x0c\x63reate_index\x18\n \x01(\x0b\x32\x16.db.server.CreateIndexH\x00\x12*\n\nstore_info\x18\x0b \x01(\x0b\x32\x14.db.server.StoreInfoH\x00\x42\n\n\x08response\"\xac\x01\n\tStoreInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03len\x18\x02 \x01(\x04\x12\x15\n\rsize_in_bytes\x18\x03 \x01(\x04\x12?\n\x12non_linear_indices\x18\x04 \x03(\x0b\x32#.algorithm.nonlinear.NonLinearIndex\x12\x19\n\x11predicate_indices\x18\x05 \x03(\t\x12\x11\n\tdimension\x18\x06 \x01(\rBHZFgithub.com/deven96/ahnlich/sdk/ahnlich-client-go/grpc/db/server;serverb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -51,16 +51,18 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SET']._serialized_end=345
   _globals['_GET']._serialized_start=347
   _globals['_GET']._serialized_end=391
-  _globals['_GETSIMNENTRY']._serialized_start=393
-  _globals['_GETSIMNENTRY']._serialized_end=517
-  _globals['_GETSIMN']._serialized_start=519
-  _globals['_GETSIMN']._serialized_end=570
-  _globals['_DEL']._serialized_start=572
-  _globals['_DEL']._serialized_end=600
-  _globals['_CREATEINDEX']._serialized_start=602
-  _globals['_CREATEINDEX']._serialized_end=640
-  _globals['_SERVERRESPONSE']._serialized_start=643
-  _globals['_SERVERRESPONSE']._serialized_end=1099
-  _globals['_STOREINFO']._serialized_start=1102
-  _globals['_STOREINFO']._serialized_end=1274
+  _globals['_LISTSTOREENTRIES']._serialized_start=393
+  _globals['_LISTSTOREENTRIES']._serialized_end=492
+  _globals['_GETSIMNENTRY']._serialized_start=494
+  _globals['_GETSIMNENTRY']._serialized_end=618
+  _globals['_GETSIMN']._serialized_start=620
+  _globals['_GETSIMN']._serialized_end=671
+  _globals['_DEL']._serialized_start=673
+  _globals['_DEL']._serialized_end=701
+  _globals['_CREATEINDEX']._serialized_start=703
+  _globals['_CREATEINDEX']._serialized_end=741
+  _globals['_SERVERRESPONSE']._serialized_start=744
+  _globals['_SERVERRESPONSE']._serialized_end=1200
+  _globals['_STOREINFO']._serialized_start=1203
+  _globals['_STOREINFO']._serialized_end=1375
 # @@protoc_insertion_point(module_scope)

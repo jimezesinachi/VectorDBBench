@@ -41,6 +41,16 @@ class AhnlichTypedDict(CommonTypedDict):
     m: Annotated[int, click.option("--m", type=click.IntRange(min=2), default=16)]
     m_zero: Annotated[int, click.option("--m-zero", type=click.IntRange(min=2), default=32)]
     ef_construction: Annotated[int, click.option("--ef-construction", type=click.IntRange(min=1), default=200)]
+    ef_search: Annotated[
+        int,
+        click.option(
+            "--ef-search",
+            type=click.IntRange(1, 2**32 - 1),
+            default=100,
+            show_default=True,
+            help="HNSW search breadth; raised to at least k by the server; ignored for flat search",
+        ),
+    ]
     extend_candidates: Annotated[bool, click.option("--extend-candidates/--no-extend-candidates", default=False)]
     keep_pruned_connections: Annotated[
         bool,
@@ -77,6 +87,7 @@ def Ahnlich(**parameters: Unpack[AhnlichTypedDict]):
             m=parameters["m"],
             m_zero=parameters["m_zero"],
             ef_construction=parameters["ef_construction"],
+            ef_search=parameters["ef_search"],
             extend_candidates=parameters["extend_candidates"],
             keep_pruned_connections=parameters["keep_pruned_connections"],
         ),

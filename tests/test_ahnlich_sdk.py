@@ -106,3 +106,14 @@ def test_sdk_real_db_matches_control(live_port, metric):
         assert 19 not in updated
     with control.init():
         assert control.search_embedding(QUERY, k=4) == updated
+
+
+def test_sdk_search_breadth_on_wire(service):
+    fixture, port = service
+    client = make_client(port, implementation="sdk")
+    client.case.ef_search = 180
+    with client.init():
+        client.insert_embeddings(VECTORS, IDS)
+        client.search_embedding(QUERY, k=4)
+    assert fixture.last_search.HasField("ef_search")
+    assert fixture.last_search.ef_search == 180

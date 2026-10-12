@@ -28,7 +28,7 @@ from vectordb_bench.backend.clients.ahnlich._grpc import keyval_pb2 as keyval__p
 from vectordb_bench.backend.clients.ahnlich._grpc import predicate_pb2 as predicate__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x64\x62/query.proto\x12\x08\x64\x62.query\x1a\x19\x61lgorithm/algorithm.proto\x1a\x19\x61lgorithm/nonlinear.proto\x1a\x0ckeyval.proto\x1a\x0fpredicate.proto\"\xc4\x01\n\x0b\x43reateStore\x12\r\n\x05store\x18\x01 \x01(\t\x12\x11\n\tdimension\x18\x02 \x01(\r\x12\x19\n\x11\x63reate_predicates\x18\x03 \x03(\t\x12?\n\x12non_linear_indices\x18\x04 \x03(\x0b\x32#.algorithm.nonlinear.NonLinearIndex\x12\x17\n\x0f\x65rror_if_exists\x18\x05 \x01(\x08\x12\x13\n\x06schema\x18\x06 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"W\n\x06GetKey\x12\r\n\x05store\x18\x01 \x01(\t\x12\x1e\n\x04keys\x18\x02 \x03(\x0b\x32\x10.keyval.StoreKey\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"k\n\x07GetPred\x12\r\n\x05store\x18\x01 \x01(\t\x12\x31\n\tcondition\x18\x02 \x01(\x0b\x32\x1e.predicates.PredicateCondition\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\xda\x01\n\x07GetSimN\x12\r\n\x05store\x18\x01 \x01(\t\x12&\n\x0csearch_input\x18\x02 \x01(\x0b\x32\x10.keyval.StoreKey\x12\x11\n\tclosest_n\x18\x03 \x01(\x04\x12\x32\n\talgorithm\x18\x04 \x01(\x0e\x32\x1f.algorithm.algorithms.Algorithm\x12\x31\n\tcondition\x18\x05 \x01(\x0b\x32\x1e.predicates.PredicateCondition\x12\x13\n\x06schema\x18\x06 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"T\n\x0f\x43reatePredIndex\x12\r\n\x05store\x18\x01 \x01(\t\x12\x12\n\npredicates\x18\x02 \x03(\t\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\x8f\x01\n\x1d\x43reateNonLinearAlgorithmIndex\x12\r\n\x05store\x18\x01 \x01(\t\x12?\n\x12non_linear_indices\x18\x02 \x03(\x0b\x32#.algorithm.nonlinear.NonLinearIndex\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"o\n\rDropPredIndex\x12\r\n\x05store\x18\x01 \x01(\t\x12\x12\n\npredicates\x18\x02 \x03(\t\x12\x1b\n\x13\x65rror_if_not_exists\x18\x03 \x01(\x08\x12\x13\n\x06schema\x18\x04 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\xae\x01\n\x1b\x44ropNonLinearAlgorithmIndex\x12\r\n\x05store\x18\x01 \x01(\t\x12\x43\n\x12non_linear_indices\x18\x02 \x03(\x0e\x32\'.algorithm.nonlinear.NonLinearAlgorithm\x12\x1b\n\x13\x65rror_if_not_exists\x18\x03 \x01(\x08\x12\x13\n\x06schema\x18\x04 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"W\n\x06\x44\x65lKey\x12\r\n\x05store\x18\x01 \x01(\t\x12\x1e\n\x04keys\x18\x02 \x03(\x0b\x32\x10.keyval.StoreKey\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"k\n\x07\x44\x65lPred\x12\r\n\x05store\x18\x01 \x01(\t\x12\x31\n\tcondition\x18\x02 \x01(\x0b\x32\x1e.predicates.PredicateCondition\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"W\n\tDropStore\x12\r\n\x05store\x18\x01 \x01(\t\x12\x1b\n\x13\x65rror_if_not_exists\x18\x02 \x01(\x08\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\x0c\n\nInfoServer\",\n\nListStores\x12\x13\n\x06schema\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\r\n\x0bListClients\"\x06\n\x04Ping\"9\n\x08GetStore\x12\r\n\x05store\x18\x01 \x01(\t\x12\x13\n\x06schema\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\x1c\n\nDropSchema\x12\x0e\n\x06schema\x18\x01 \x01(\t\"Z\n\x03Set\x12\r\n\x05store\x18\x01 \x01(\t\x12$\n\x06inputs\x18\x02 \x03(\x0b\x32\x14.keyval.DbStoreEntry\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\xf0\x01\n\x06Upsert\x12\r\n\x05store\x18\x01 \x01(\t\x12\x31\n\tcondition\x18\x02 \x01(\x0b\x32\x1e.predicates.PredicateCondition\x12&\n\x07new_key\x18\x03 \x01(\x0b\x32\x10.keyval.StoreKeyH\x00\x88\x01\x01\x12*\n\tnew_value\x18\x04 \x01(\x0b\x32\x12.keyval.StoreValueH\x01\x88\x01\x01\x12\x16\n\x0emerge_metadata\x18\x05 \x01(\x08\x12\x13\n\x06schema\x18\x06 \x01(\tH\x02\x88\x01\x01\x42\n\n\x08_new_keyB\x0c\n\n_new_valueB\t\n\x07_schemaBFZDgithub.com/deven96/ahnlich/sdk/ahnlich-client-go/grpc/db/query;queryb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x64\x62/query.proto\x12\x08\x64\x62.query\x1a\x19\x61lgorithm/algorithm.proto\x1a\x19\x61lgorithm/nonlinear.proto\x1a\x0ckeyval.proto\x1a\x0fpredicate.proto\"\xc4\x01\n\x0b\x43reateStore\x12\r\n\x05store\x18\x01 \x01(\t\x12\x11\n\tdimension\x18\x02 \x01(\r\x12\x19\n\x11\x63reate_predicates\x18\x03 \x03(\t\x12?\n\x12non_linear_indices\x18\x04 \x03(\x0b\x32#.algorithm.nonlinear.NonLinearIndex\x12\x17\n\x0f\x65rror_if_exists\x18\x05 \x01(\x08\x12\x13\n\x06schema\x18\x06 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"W\n\x06GetKey\x12\r\n\x05store\x18\x01 \x01(\t\x12\x1e\n\x04keys\x18\x02 \x03(\x0b\x32\x10.keyval.StoreKey\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"k\n\x07GetPred\x12\r\n\x05store\x18\x01 \x01(\t\x12\x31\n\tcondition\x18\x02 \x01(\x0b\x32\x1e.predicates.PredicateCondition\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\x80\x02\n\x07GetSimN\x12\r\n\x05store\x18\x01 \x01(\t\x12&\n\x0csearch_input\x18\x02 \x01(\x0b\x32\x10.keyval.StoreKey\x12\x11\n\tclosest_n\x18\x03 \x01(\x04\x12\x32\n\talgorithm\x18\x04 \x01(\x0e\x32\x1f.algorithm.algorithms.Algorithm\x12\x31\n\tcondition\x18\x05 \x01(\x0b\x32\x1e.predicates.PredicateCondition\x12\x13\n\x06schema\x18\x06 \x01(\tH\x00\x88\x01\x01\x12\x16\n\tef_search\x18\x07 \x01(\rH\x01\x88\x01\x01\x42\t\n\x07_schemaB\x0c\n\n_ef_search\"T\n\x0f\x43reatePredIndex\x12\r\n\x05store\x18\x01 \x01(\t\x12\x12\n\npredicates\x18\x02 \x03(\t\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\x8f\x01\n\x1d\x43reateNonLinearAlgorithmIndex\x12\r\n\x05store\x18\x01 \x01(\t\x12?\n\x12non_linear_indices\x18\x02 \x03(\x0b\x32#.algorithm.nonlinear.NonLinearIndex\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"o\n\rDropPredIndex\x12\r\n\x05store\x18\x01 \x01(\t\x12\x12\n\npredicates\x18\x02 \x03(\t\x12\x1b\n\x13\x65rror_if_not_exists\x18\x03 \x01(\x08\x12\x13\n\x06schema\x18\x04 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\xae\x01\n\x1b\x44ropNonLinearAlgorithmIndex\x12\r\n\x05store\x18\x01 \x01(\t\x12\x43\n\x12non_linear_indices\x18\x02 \x03(\x0e\x32\'.algorithm.nonlinear.NonLinearAlgorithm\x12\x1b\n\x13\x65rror_if_not_exists\x18\x03 \x01(\x08\x12\x13\n\x06schema\x18\x04 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"W\n\x06\x44\x65lKey\x12\r\n\x05store\x18\x01 \x01(\t\x12\x1e\n\x04keys\x18\x02 \x03(\x0b\x32\x10.keyval.StoreKey\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"k\n\x07\x44\x65lPred\x12\r\n\x05store\x18\x01 \x01(\t\x12\x31\n\tcondition\x18\x02 \x01(\x0b\x32\x1e.predicates.PredicateCondition\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\";\n\nClearStore\x12\r\n\x05store\x18\x01 \x01(\t\x12\x13\n\x06schema\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"W\n\tDropStore\x12\r\n\x05store\x18\x01 \x01(\t\x12\x1b\n\x13\x65rror_if_not_exists\x18\x02 \x01(\x08\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\x0c\n\nInfoServer\",\n\nListStores\x12\x13\n\x06schema\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\xc5\x01\n\x10ListStoreEntries\x12\r\n\x05store\x18\x01 \x01(\t\x12\x13\n\x06\x63ursor\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x12\n\x05limit\x18\x03 \x01(\rH\x01\x88\x01\x01\x12\x36\n\tcondition\x18\x04 \x01(\x0b\x32\x1e.predicates.PredicateConditionH\x02\x88\x01\x01\x12\x13\n\x06schema\x18\x05 \x01(\tH\x03\x88\x01\x01\x42\t\n\x07_cursorB\x08\n\x06_limitB\x0c\n\n_conditionB\t\n\x07_schema\"\r\n\x0bListClients\"\x06\n\x04Ping\"9\n\x08GetStore\x12\r\n\x05store\x18\x01 \x01(\t\x12\x13\n\x06schema\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\x1c\n\nDropSchema\x12\x0e\n\x06schema\x18\x01 \x01(\t\"Z\n\x03Set\x12\r\n\x05store\x18\x01 \x01(\t\x12$\n\x06inputs\x18\x02 \x03(\x0b\x32\x14.keyval.DbStoreEntry\x12\x13\n\x06schema\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_schema\"\xf0\x01\n\x06Upsert\x12\r\n\x05store\x18\x01 \x01(\t\x12\x31\n\tcondition\x18\x02 \x01(\x0b\x32\x1e.predicates.PredicateCondition\x12&\n\x07new_key\x18\x03 \x01(\x0b\x32\x10.keyval.StoreKeyH\x00\x88\x01\x01\x12*\n\tnew_value\x18\x04 \x01(\x0b\x32\x12.keyval.StoreValueH\x01\x88\x01\x01\x12\x16\n\x0emerge_metadata\x18\x05 \x01(\x08\x12\x13\n\x06schema\x18\x06 \x01(\tH\x02\x88\x01\x01\x42\n\n\x08_new_keyB\x0c\n\n_new_valueB\t\n\x07_schemaBFZDgithub.com/deven96/ahnlich/sdk/ahnlich-client-go/grpc/db/query;queryb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -43,35 +43,39 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_GETPRED']._serialized_start=401
   _globals['_GETPRED']._serialized_end=508
   _globals['_GETSIMN']._serialized_start=511
-  _globals['_GETSIMN']._serialized_end=729
-  _globals['_CREATEPREDINDEX']._serialized_start=731
-  _globals['_CREATEPREDINDEX']._serialized_end=815
-  _globals['_CREATENONLINEARALGORITHMINDEX']._serialized_start=818
-  _globals['_CREATENONLINEARALGORITHMINDEX']._serialized_end=961
-  _globals['_DROPPREDINDEX']._serialized_start=963
-  _globals['_DROPPREDINDEX']._serialized_end=1074
-  _globals['_DROPNONLINEARALGORITHMINDEX']._serialized_start=1077
-  _globals['_DROPNONLINEARALGORITHMINDEX']._serialized_end=1251
-  _globals['_DELKEY']._serialized_start=1253
-  _globals['_DELKEY']._serialized_end=1340
-  _globals['_DELPRED']._serialized_start=1342
-  _globals['_DELPRED']._serialized_end=1449
-  _globals['_DROPSTORE']._serialized_start=1451
-  _globals['_DROPSTORE']._serialized_end=1538
-  _globals['_INFOSERVER']._serialized_start=1540
-  _globals['_INFOSERVER']._serialized_end=1552
-  _globals['_LISTSTORES']._serialized_start=1554
-  _globals['_LISTSTORES']._serialized_end=1598
-  _globals['_LISTCLIENTS']._serialized_start=1600
-  _globals['_LISTCLIENTS']._serialized_end=1613
-  _globals['_PING']._serialized_start=1615
-  _globals['_PING']._serialized_end=1621
-  _globals['_GETSTORE']._serialized_start=1623
-  _globals['_GETSTORE']._serialized_end=1680
-  _globals['_DROPSCHEMA']._serialized_start=1682
-  _globals['_DROPSCHEMA']._serialized_end=1710
-  _globals['_SET']._serialized_start=1712
-  _globals['_SET']._serialized_end=1802
-  _globals['_UPSERT']._serialized_start=1805
-  _globals['_UPSERT']._serialized_end=2045
+  _globals['_GETSIMN']._serialized_end=767
+  _globals['_CREATEPREDINDEX']._serialized_start=769
+  _globals['_CREATEPREDINDEX']._serialized_end=853
+  _globals['_CREATENONLINEARALGORITHMINDEX']._serialized_start=856
+  _globals['_CREATENONLINEARALGORITHMINDEX']._serialized_end=999
+  _globals['_DROPPREDINDEX']._serialized_start=1001
+  _globals['_DROPPREDINDEX']._serialized_end=1112
+  _globals['_DROPNONLINEARALGORITHMINDEX']._serialized_start=1115
+  _globals['_DROPNONLINEARALGORITHMINDEX']._serialized_end=1289
+  _globals['_DELKEY']._serialized_start=1291
+  _globals['_DELKEY']._serialized_end=1378
+  _globals['_DELPRED']._serialized_start=1380
+  _globals['_DELPRED']._serialized_end=1487
+  _globals['_CLEARSTORE']._serialized_start=1489
+  _globals['_CLEARSTORE']._serialized_end=1548
+  _globals['_DROPSTORE']._serialized_start=1550
+  _globals['_DROPSTORE']._serialized_end=1637
+  _globals['_INFOSERVER']._serialized_start=1639
+  _globals['_INFOSERVER']._serialized_end=1651
+  _globals['_LISTSTORES']._serialized_start=1653
+  _globals['_LISTSTORES']._serialized_end=1697
+  _globals['_LISTSTOREENTRIES']._serialized_start=1700
+  _globals['_LISTSTOREENTRIES']._serialized_end=1897
+  _globals['_LISTCLIENTS']._serialized_start=1899
+  _globals['_LISTCLIENTS']._serialized_end=1912
+  _globals['_PING']._serialized_start=1914
+  _globals['_PING']._serialized_end=1920
+  _globals['_GETSTORE']._serialized_start=1922
+  _globals['_GETSTORE']._serialized_end=1979
+  _globals['_DROPSCHEMA']._serialized_start=1981
+  _globals['_DROPSCHEMA']._serialized_end=2009
+  _globals['_SET']._serialized_start=2011
+  _globals['_SET']._serialized_end=2101
+  _globals['_UPSERT']._serialized_start=2104
+  _globals['_UPSERT']._serialized_end=2344
 # @@protoc_insertion_point(module_scope)

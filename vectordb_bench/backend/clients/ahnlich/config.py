@@ -26,6 +26,7 @@ class AhnlichIndexConfig(BaseModel, DBCaseConfig):
     m: int = Field(default=16, ge=2)
     m_zero: int = Field(default=32, ge=2)
     ef_construction: int = Field(default=200, ge=1)
+    ef_search: int = Field(default=100, ge=1, le=2**32 - 1)
     extend_candidates: bool = False
     keep_pruned_connections: bool = False
 
@@ -33,5 +34,4 @@ class AhnlichIndexConfig(BaseModel, DBCaseConfig):
         return self.model_dump()
 
     def search_param(self) -> dict:
-        # The pinned DB API has no ef_search request parameter.
-        return {"algorithm": self.algorithm, "ef_search_policy": "server default (max(k, 50))"}
+        return {"algorithm": self.algorithm, "ef_search": self.ef_search}

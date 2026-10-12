@@ -9,6 +9,7 @@ ahnlich:
   m: 16
   m_zero: 32
   ef_construction: 200
+  ef_search: 100
   load_concurrency: 1
   insert_batch_size: 100
   k: 100

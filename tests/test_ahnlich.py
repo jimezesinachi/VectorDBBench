@@ -78,6 +78,7 @@ class FixtureService(db_service_pb2_grpc.DBServiceServicer):
         return response
 
     def GetSimN(self, request, context):
+        self.last_search = request
         metric = request.algorithm
         if metric == algorithm_pb2.HNSW:
             metric = {
@@ -264,7 +265,7 @@ def test_registration_and_cli():
     runner = CliRunner()
     help_result = runner.invoke(AhnlichCli, ["--help"])
     assert help_result.exit_code == 0, help_result.output
-    assert "--ef-search" not in help_result.output
+    assert "--ef-search" in help_result.output
     refused = runner.invoke(AhnlichCli, ["--load-concurrency", "2"])
     assert refused.exit_code == 2
     dry_run = runner.invoke(AhnlichCli, ["--case-type", "Performance1536D50K", "--dry-run"])
@@ -338,3 +339,31 @@ def test_real_db_exact_and_hnsw_agree(live_port, metric):
         assert 19 not in updated_ids
         client.case.algorithm = "flat"
         assert client.search_embedding(QUERY, k=4) == updated_ids
+
+
+@pytest.mark.parametrize("algorithm", ["hnsw", "flat"])
+@pytest.mark.parametrize("ef_search", [100, 180, 118])
+def test_search_breadth_on_wire(service, algorithm, ef_search):
+    fixture, port = service
+    client = make_client(port, algorithm=algorithm)
+    client.case.ef_search = ef_search
+    with client.init():
+        client.insert_embeddings(VECTORS, IDS)
+        client.search_embedding(QUERY, k=4)
+    assert fixture.last_search.HasField("ef_search") == (algorithm == "hnsw")
+    if algorithm == "hnsw":
+        assert fixture.last_search.ef_search == ef_search
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "4294967296"])
+def test_cli_rejects_invalid_search_breadth(value):
+    result = CliRunner().invoke(AhnlichCli, ["--ef-search", value, "--dry-run"])
+    assert result.exit_code == 2
+
+
+def test_cli_search_breadth_config(monkeypatch):
+    captured = {}
+    monkeypatch.setattr("vectordb_bench.backend.clients.ahnlich.cli.run", lambda **kwargs: captured.update(kwargs))
+    result = CliRunner().invoke(AhnlichCli, ["--ef-search", "180", "--dry-run"])
+    assert result.exit_code == 0, result.output
+    assert captured["db_case_config"].search_param()["ef_search"] == 180

@@ -72,6 +72,11 @@ class DBServiceStub(object):
                 request_serializer=db_dot_query__pb2.GetStore.SerializeToString,
                 response_deserializer=db_dot_server__pb2.StoreInfo.FromString,
                 _registered_method=True)
+        self.ListStoreEntries = channel.unary_unary(
+                '/services.db_service.DBService/ListStoreEntries',
+                request_serializer=db_dot_query__pb2.ListStoreEntries.SerializeToString,
+                response_deserializer=db_dot_server__pb2.ListStoreEntries.FromString,
+                _registered_method=True)
         self.Set = channel.unary_unary(
                 '/services.db_service.DBService/Set',
                 request_serializer=db_dot_query__pb2.Set.SerializeToString,
@@ -110,6 +115,11 @@ class DBServiceStub(object):
         self.DropSchema = channel.unary_unary(
                 '/services.db_service.DBService/DropSchema',
                 request_serializer=db_dot_query__pb2.DropSchema.SerializeToString,
+                response_deserializer=db_dot_server__pb2.Del.FromString,
+                _registered_method=True)
+        self.ClearStore = channel.unary_unary(
+                '/services.db_service.DBService/ClearStore',
+                request_serializer=db_dot_query__pb2.ClearStore.SerializeToString,
                 response_deserializer=db_dot_server__pb2.Del.FromString,
                 _registered_method=True)
         self.ListClients = channel.unary_unary(
@@ -191,6 +201,12 @@ class DBServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListStoreEntries(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def Set(self, request, context):
         """* Update methods *
         """
@@ -236,6 +252,12 @@ class DBServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def DropSchema(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ClearStore(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -317,6 +339,11 @@ def add_DBServiceServicer_to_server(servicer, server):
                     request_deserializer=db_dot_query__pb2.GetStore.FromString,
                     response_serializer=db_dot_server__pb2.StoreInfo.SerializeToString,
             ),
+            'ListStoreEntries': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListStoreEntries,
+                    request_deserializer=db_dot_query__pb2.ListStoreEntries.FromString,
+                    response_serializer=db_dot_server__pb2.ListStoreEntries.SerializeToString,
+            ),
             'Set': grpc.unary_unary_rpc_method_handler(
                     servicer.Set,
                     request_deserializer=db_dot_query__pb2.Set.FromString,
@@ -355,6 +382,11 @@ def add_DBServiceServicer_to_server(servicer, server):
             'DropSchema': grpc.unary_unary_rpc_method_handler(
                     servicer.DropSchema,
                     request_deserializer=db_dot_query__pb2.DropSchema.FromString,
+                    response_serializer=db_dot_server__pb2.Del.SerializeToString,
+            ),
+            'ClearStore': grpc.unary_unary_rpc_method_handler(
+                    servicer.ClearStore,
+                    request_deserializer=db_dot_query__pb2.ClearStore.FromString,
                     response_serializer=db_dot_server__pb2.Del.SerializeToString,
             ),
             'ListClients': grpc.unary_unary_rpc_method_handler(
@@ -588,6 +620,33 @@ class DBService(object):
             _registered_method=True)
 
     @staticmethod
+    def ListStoreEntries(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/services.db_service.DBService/ListStoreEntries',
+            db_dot_query__pb2.ListStoreEntries.SerializeToString,
+            db_dot_server__pb2.ListStoreEntries.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
     def Set(request,
             target,
             options=(),
@@ -792,6 +851,33 @@ class DBService(object):
             target,
             '/services.db_service.DBService/DropSchema',
             db_dot_query__pb2.DropSchema.SerializeToString,
+            db_dot_server__pb2.Del.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ClearStore(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/services.db_service.DBService/ClearStore',
+            db_dot_query__pb2.ClearStore.SerializeToString,
             db_dot_server__pb2.Del.FromString,
             options,
             channel_credentials,

@@ -227,6 +227,7 @@ class Ahnlich(VectorDB):
                 schema=self.connection.namespace,
                 search_input=keyval_pb2.StoreKey(key=query),
                 closest_n=k,
+                ef_search=self.case.ef_search if self.case.algorithm == "hnsw" else None,
                 algorithm=algorithm,
             ),
         )

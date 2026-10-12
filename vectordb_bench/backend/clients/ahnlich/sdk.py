@@ -43,6 +43,13 @@ class LimitedProtoCodec(ProtoCodec):
 class AhnlichSDK(Ahnlich):
     thread_safe = False
 
+    def __init__(self, *args, **kwargs):
+        if "ef_search" not in db_query.GetSimN.__dataclass_fields__:
+            raise RuntimeError(
+                "Install the Python SDK from the Ahnlich checkout used by the server (see docs/ahnlich.md)"
+            )
+        super().__init__(*args, **kwargs)
+
     def copy_for_thread(self):
         client = copy.copy(self)
         client._runner = None
@@ -200,6 +207,7 @@ class AhnlichSDK(Ahnlich):
                 schema=self.connection.namespace,
                 search_input=keyval.StoreKey(key=self._wire_vector(query)),
                 closest_n=k,
+                ef_search=self.case.ef_search if self.case.algorithm == "hnsw" else None,
                 algorithm=algorithms.Algorithm.HNSW if self.case.algorithm == "hnsw" else self._flat_algorithm,
             ),
         )
