@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/deven96/ahnlich",
-  "revision": "2a8a2bc30858aaa2c949e508c5f122e575bb0c39",
+  "revision": "80ebf5991c528ef7258da5ec2c067319e2165d54",
   "grpcio_tools": "1.67.1",
   "protobuf": "5.29.5",
   "proto_sha256": {
