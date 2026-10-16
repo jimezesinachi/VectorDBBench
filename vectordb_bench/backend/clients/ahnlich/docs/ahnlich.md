@@ -263,3 +263,25 @@ and server logs. Missing samples retain their errors rather than appearing as
 zero memory. Allocator usage and RSS measure different things; compare both.
 The tool checks the result JSON success label even if the loader exits zero,
 returns nonzero on a failed load, and stops its DB on completion or failure.
+
+To run Cohere 10M HNSW with Ahnlich defaults and memory sampling through both
+loading and search, use the same diagnostic with:
+
+```bash
+RESULTS_DIR="$PWD/.data/results/memory-cohere10m-hnsw-$(date +%Y%m%d_%H%M%S)"
+mkdir -p "$RESULTS_DIR"
+set -o pipefail
+python -u -m vectordb_bench.backend.clients.ahnlich.tools.diagnose_ahnlich_memory \
+  --algorithm hnsw --case-type Performance768D10M --search \
+  --m 16 --m-zero 32 --ef-construction 200 --ef-search 100 \
+  --server-bin "$PWD/.data/ahnlich-target/release/ahnlich-db" \
+  --server-ref "$(git -C "$AHNLICH_ROOT" rev-parse HEAD)" --results "$RESULTS_DIR" \
+  2>&1 | tee "$RESULTS_DIR/run.txt"
+```
+
+This uses the existing binary; rebuild it first if the source revision changed.
+Search uses top 100, concurrency 12, 14, 16, 18, and 20, and 30 seconds per level.
+The same server remains running between load and search. `memory.csv` also records
+available system memory and swap usage. `status.json` records completion/failure
+and the DB exit code observed before cleanup. Abrupt process termination can
+prevent the final status update; flushed CSV samples and logs remain available.

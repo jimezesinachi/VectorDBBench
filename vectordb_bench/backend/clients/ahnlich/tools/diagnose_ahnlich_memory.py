@@ -1,4 +1,4 @@
-"""Load Small Cohere with one worker and sample DB memory; no search benchmark."""
+"""Run one vector case with one loading worker and sample DB/system memory."""
 
 import argparse
 import csv
@@ -30,6 +30,8 @@ def memory_sample(stub: DBServiceStub, process: psutil.Process, phase: str) -> d
         "allocator_limit_bytes": "",
         "allocator_used_bytes": "",
         "rss_bytes": "",
+        "system_available_bytes": psutil.virtual_memory().available,
+        "system_swap_used_bytes": psutil.swap_memory().used,
         "error": "",
     }
     try:
@@ -80,17 +82,22 @@ def terminate_process(process: subprocess.Popen):
             process.wait()
 
 
-def run_load(command: list[str], env: dict, root: Path):
+def run_load(command: list[str], env: dict, root: Path, stage: str = "load"):
+    """Stream one CLI stage to its own log and preserve its exit code."""
     with (
-        (root / "load.txt").open("w") as load_log,
+        (root / f"{stage}.txt").open("w") as load_log,
         subprocess.Popen(command, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True) as loader,
     ):
         try:
             for line in loader.stdout:
                 load_log.write(line)
+                load_log.flush()
                 print(line, end="", flush=True)
-            if loader.wait():
-                raise RuntimeError("Loader exited nonzero; inspect load.txt")
+            code = loader.wait()
+            print(f"{stage} CLI exit code: {code}", flush=True)
+            if code:
+                message = f"{stage} exited with code {code}; inspect {stage}.txt"
+                raise RuntimeError(message)
         finally:
             terminate_process(loader)
 
@@ -102,10 +109,17 @@ def parse_arguments():
     parser.add_argument("--server-ref", required=True)
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--port", type=int, default=1369)
+    parser.add_argument("--case-type", help="Preset case; omit for the original Small Cohere 100K diagnostic")
+    parser.add_argument("--m", type=int, default=15)
+    parser.add_argument("--m-zero", type=int, default=30)
+    parser.add_argument("--ef-construction", type=int, default=500)
+    parser.add_argument("--ef-search", type=int, default=180)
+    parser.add_argument("--search", action="store_true", help="Run serial and concurrent search after loading")
+    parser.add_argument("--num-concurrency", default="12,14,16,18,20")
     return parser.parse_args()
 
 
-def main():
+def main():  # noqa: PLR0915 -- Keep the diagnostic process lifecycle in one place.
     args = parse_arguments()
     binary = args.server_bin.resolve(strict=True)
     root = args.results.resolve()
@@ -118,6 +132,7 @@ def main():
         probe.bind(("127.0.0.1", args.port))
     stop = threading.Event()
     phase = ["baseline"]
+    status = {"state": "running", "phase": "baseline"}
     monitor = None
     server_command = [
         str(binary),
@@ -147,9 +162,8 @@ def main():
         "--db-label",
         "memory-diagnostic",
         "--case-type",
-        "Performance",
-        "--dataset-name",
-        DATASET,
+        args.case_type or "Performance",
+        *([] if args.case_type else ["--dataset-name", DATASET]),
         "--algorithm",
         args.algorithm,
         "--collection-name",
@@ -161,13 +175,19 @@ def main():
         "--insert-batch-size",
         "100",
         "--m",
-        "15",
+        str(args.m),
         "--m-zero",
-        "30",
+        str(args.m_zero),
         "--ef-construction",
-        "500",
+        str(args.ef_construction),
         "--ef-search",
-        "180",
+        str(args.ef_search),
+        "--k",
+        "100",
+        "--num-concurrency",
+        args.num_concurrency,
+        "--concurrency-duration",
+        "30",
         "--message-size",
         "67108864",
         "--drop-old",
@@ -175,7 +195,12 @@ def main():
         "--skip-search-serial",
         "--skip-search-concurrent",
     ]
-    (root / "commands.json").write_text(json.dumps({"server": server_command, "load": command}, indent=2) + "\n")
+    search_command = [*command[:-4], "--skip-drop-old", "--skip-load", "--search-serial", "--search-concurrent"]
+    commands = {"server": server_command, "load": command}
+    if args.search:
+        commands["search"] = search_command
+    (root / "commands.json").write_text(json.dumps(commands, indent=2) + "\n")
+    (root / "status.json").write_text(json.dumps(status, indent=2) + "\n")
     with (root / "server.log").open("w") as log:
         server = subprocess.Popen(server_command, stdout=log, stderr=subprocess.STDOUT)
         try:
@@ -200,13 +225,32 @@ def main():
                     stop.wait(1)
                 if "Error inserting into index" in (root / "server.log").read_text():
                     raise RuntimeError("DB logged an index insertion error; discard the load")
+                if args.search:
+                    phase[0] = "searching"
+                    env = dict(
+                        os.environ, RESULTS_LOCAL_DIR=str(root / "search" / "json"), LOG_FILE=str(root / "search.log")
+                    )
+                    run_load(search_command, env, root, "search")
+                    read_result(root / "search" / "json")
+                    if server.poll() is not None:
+                        raise RuntimeError("DB exited during search; inspect server.log and memory.csv")
+                status["state"] = "completed"
                 print(f"Diagnostic complete: {root / 'memory.csv'}", flush=True)
             finally:
                 stop.set()
                 if monitor is not None:
                     monitor.join(timeout=5)
                 channel.close()
+        except BaseException as error:
+            status.update(state="failed", error=f"{type(error).__name__}: {error}")
+            raise
         finally:
+            status.update(
+                phase=phase[0],
+                time_utc=datetime.now(UTC).isoformat(),
+                server_returncode_before_cleanup=server.poll(),
+            )
+            (root / "status.json").write_text(json.dumps(status, indent=2) + "\n")
             terminate_process(server)
 
 
